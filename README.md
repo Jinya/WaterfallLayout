@@ -1,5 +1,5 @@
 # WaterflowLayout
-waterflow style layout for UICollectionView.
+Waterflow style layout for UICollectionView.
 # Preview
 ![Preview](https://github.com/JinyaX/WaterflowLayout/blob/master/preview.gif)
 # How to use
@@ -20,7 +20,7 @@ class DemoCollectionView: UICollectionView, UICollectionViewDelegateFlowLayout, 
         layout.rowSpacing = 10
         layout.columnsCount = 10
         self.collectionViewLayout = layout
-	}
+    }
     
     // WaterflowLayoutDelegate
     func collectionView(_ collectionView: UICollectionView, heightForItemAt indexPath: IndexPath) -> CGFloat {
