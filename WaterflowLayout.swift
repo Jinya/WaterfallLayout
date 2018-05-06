@@ -16,7 +16,7 @@ class WaterflowLayout: UICollectionViewLayout {
     
     weak var delegate: WaterflowLayoutDelegate?
     
-    /// collectionView contentInset, default = (10, 10, 10, 10)
+    /// collectionView sections contentInset, default = (10, 10, 10, 10)
     public var sectionInset: UIEdgeInsets = UIEdgeInsets(
         top: 10,
         left: 10,
@@ -25,10 +25,10 @@ class WaterflowLayout: UICollectionViewLayout {
     )
     
     /// spacing between columns, default = 10
-    public var columnMargin: CGFloat = 10
+    public var columnSpacing: CGFloat = 10
     
     /// spacing between rows, default = 10
-    public var rowMargin: CGFloat = 10
+    public var rowSpacing: CGFloat = 10
     
     /// columns's count, default = 2
     public var columnsCount: Int = 2
@@ -79,13 +79,13 @@ class WaterflowLayout: UICollectionViewLayout {
         let minColumn = maxYArray.index(of: minHeight)!
         
         /// calculate the item size
-        let width: CGFloat = (collectionView!.frame.size.width - sectionInset.left - sectionInset.right - CGFloat(columnsCount - 1) * columnMargin) / CGFloat(columnsCount)
+        let width: CGFloat = (collectionView!.frame.size.width - sectionInset.left - sectionInset.right - CGFloat(columnsCount - 1) * columnSpacing) / CGFloat(columnsCount)
         let height: CGFloat = delegate.collectionView(collectionView!, heightForItemAt: indexPath)
         
-        let x: CGFloat = sectionInset.left + (width + columnMargin) * CGFloat(minColumn)
+        let x: CGFloat = sectionInset.left + (width + columnSpacing) * CGFloat(minColumn)
         var y = minHeight
         if indexPath.item >= columnsCount {
-            y += rowMargin
+            y += rowSpacing
         }
         
         /// update the maxY
