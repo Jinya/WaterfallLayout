@@ -1,7 +1,10 @@
 # WaterflowLayout
 Waterflow style layout for UICollectionView.
-# Preview
+# Example
+### Frame for Unsplash
+https://itunes.apple.com/cn/app/frame-for-unsplash/id1380041207?mt=8
 ![Preview](https://github.com/JinyaX/WaterflowLayout/blob/master/preview.gif)
+
 # How to use
 Drag the ‘WaterflowLayout.swift’ to your Xcode project. It contains a protocol `WaterflowLayoutDelegate` and a class `WaterflowLayout`.
 Write a custom collectionView like this:
