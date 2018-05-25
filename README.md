@@ -3,6 +3,7 @@ Waterflow style layout for UICollectionView.
 # Example
 ### Frame for Unsplash
 https://itunes.apple.com/cn/app/frame-for-unsplash/id1380041207?mt=8
+
 ![Preview](https://github.com/JinyaX/WaterflowLayout/blob/master/preview.gif)
 
 # How to use
