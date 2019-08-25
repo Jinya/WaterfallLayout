@@ -8,31 +8,52 @@ https://itunes.apple.com/cn/app/frame-for-unsplash/id1380041207?mt=8
 
 # How to use
 Drag the ‘WaterflowLayout.swift’ to your Xcode project. It contains a protocol `WaterflowLayoutDelegate` and a class `WaterflowLayout`.
-Write a custom collectionView like this:
+
+Write a custom collectionView in your view controller like this:
 ```swift
-class DemoCollectionView: UICollectionView, UICollectionViewDelegateFlowLayout, WaterflowLayoutDelegate {
+class YourViewController: UIViewController {
+
+    ......
+
+    // Waterflow View
+    var collectionView: UICollectionView = {
+        let layout = WaterflowLayout()
+        layout.sectionInset = UIEdgeInset(top: 10, left: 10, bottom: 10, right: 10)
+        layout.minimumColumnSpacing = 10
+        layout.minimumInneritemSpacing = 10
+        layout.columnCount = 2
+        let view = UICollectionView(frame: YOUR_VIEW_FRAME, collectionViewLayout: layout)
+        view.register(WaterFlowCell.self, forCellWithReuseIdentifier: "CELl_REUSE_ID")
+        view.delegate = self
+        view.dataSource = self
+        return view
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.addSubview(collectionView)
+    }
 
     ......
     
-    init() {
-        super.init()
-        
-        let layout = WaterflowLayout()
-        layout.delegate = self
-        layout.sectionInset = UIEdgeInset(top: 10, left: 10, bottom: 10, right: 10)
-        layout.columnSpacing = 10
-        layout.rowSpacing = 10
-        layout.columnsCount = 10
-        self.collectionViewLayout = layout
-    }
-    
-    // WaterflowLayoutDelegate
-    func collectionView(_ collectionView: UICollectionView, heightForItemAt indexPath: IndexPath) -> CGFloat {
-        let height = calculated item's height
-        return height
-    }
-    
+}
+
+// UICollectionView DataSource & Delegate
+extension YourViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+
     ......
+
+}
+
+// WaterflowViewDelegate
+extension YourViewController: WaterflowViewDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+        let height = calculated item's height
+        let width = calculated item's width
+        return CGSize(width: width, height: height)
+    }
     
 }
 ```
