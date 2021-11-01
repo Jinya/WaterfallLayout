@@ -1,14 +1,32 @@
 //
-//  WaterflowLayout.swift
-//  Frame
+//  AppStoreReviewManager
+//  https://github.com/Jinya/WaterfallLayout
 //
-//  Created by Jinya on 2018/4/25.
-//  Copyright © 2018年 Jinya. All rights reserved.
+//  Created by Jinya on 2021/10/29.
 //
+//  Copyright (c) 2021 Jinya<https://github.com/Jinya>
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 
 import UIKit
 
-@objc protocol WaterflowViewDelegate: UICollectionViewDelegate {
+@objc protocol WaterfallViewDelegate: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -31,13 +49,13 @@ import UIKit
                                        minimumInneritemSpacingForSectionAtIndex section: NSInteger) -> CGFloat
 }
 
-enum WaterflowLayoutItemRenderDirection: NSInteger {
+enum WaterfallLayoutItemRenderDirection: NSInteger {
     case shortestFirst
     case leftToRight
     case rightToLeft
 }
 
-class WaterflowLayout: UICollectionViewLayout {
+class WaterfallLayout: UICollectionViewLayout {
     
     /// column count
     var columnCount: NSInteger {
@@ -82,7 +100,7 @@ class WaterflowLayout: UICollectionViewLayout {
     }
     
     /// direction priority for item rendering
-    var itemRenderDirection: WaterflowLayoutItemRenderDirection {
+    var itemRenderDirection: WaterfallLayoutItemRenderDirection {
         didSet {
             invalidateLayout()
         }
@@ -90,12 +108,12 @@ class WaterflowLayout: UICollectionViewLayout {
     
     
     // MARK: - Private
-    private let waterflowElementKindSectionHeader = "waterflowElementKindSectionHeader"
-    private let waterflowElementKindSectionFooter = "waterflowElementKindSectionFooter"
+    private let waterfallElementKindSectionHeader = "waterfallElementKindSectionHeader"
+    private let waterfallElementKindSectionFooter = "waterfallElementKindSectionFooter"
     
-    private weak var delegate: WaterflowViewDelegate? {
+    private weak var delegate: WaterfallViewDelegate? {
         get {
-            return self.collectionView?.delegate as? WaterflowViewDelegate
+            return self.collectionView?.delegate as? WaterfallViewDelegate
         }
     }
     
@@ -192,7 +210,7 @@ class WaterflowLayout: UICollectionViewLayout {
             }
             
             if heightHeader > 0 {
-                attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: waterflowElementKindSectionHeader, with: IndexPath(row: 0, section: section))
+                attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: waterfallElementKindSectionHeader, with: IndexPath(row: 0, section: section))
                 attributes.frame = CGRect(x: 0, y: top, width: cView.frame.size.width, height: heightHeader)
                 headersAttributes[section] = attributes
                 allItemAttributes.append(attributes)
@@ -248,7 +266,7 @@ class WaterflowLayout: UICollectionViewLayout {
             }
             
             if footerHeight > 0 {
-                attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: waterflowElementKindSectionFooter, with: IndexPath(item: 0, section: section))
+                attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: waterfallElementKindSectionFooter, with: IndexPath(item: 0, section: section))
                 attributes.frame = CGRect(x: 0, y: top, width: cView.frame.size.width, height: footerHeight)
                 footersAttributes[section] = attributes
                 allItemAttributes.append(attributes)
@@ -296,9 +314,9 @@ class WaterflowLayout: UICollectionViewLayout {
     
     override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes{
         var attribute = UICollectionViewLayoutAttributes()
-        if elementKind == waterflowElementKindSectionHeader {
+        if elementKind == waterfallElementKindSectionHeader {
             attribute = headersAttributes[indexPath.section]
-        } else if elementKind == waterflowElementKindSectionFooter {
+        } else if elementKind == waterfallElementKindSectionFooter {
             attribute = footersAttributes[indexPath.section]
         }
         return attribute

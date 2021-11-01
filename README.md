@@ -1,28 +1,33 @@
-# WaterflowLayout
-Waterflow style layout for UICollectionView.
-# Example
-### Frame for Unsplash
-https://itunes.apple.com/cn/app/frame-for-unsplash/id1380041207?mt=8
+# WaterfallLayout
+A waterfall-like layout for UICollectionView.
 
-![Preview](https://github.com/JinyaX/WaterflowLayout/blob/master/preview.gif)
+## Preview
+![Preview](preview.gif)
 
-# How to use
-Drag the ‘WaterflowLayout.swift’ to your Xcode project. It contains a protocol `WaterflowLayoutDelegate` and a class `WaterflowLayout`.
+## Installation
+#### Swift Package Manager (Recommended)
 
-Write a custom collectionView in your view controller like this:
+- Xcode >  File > Swift Packages > Add Package Dependency
+- Add `https://github.com/Jinya/WaterfallLayout.git`
+- Select "Exact Version" (recommend using the latest exact version)
+
+## How to use
 ```swift
+import UIKit
+import WaterfallLayout
+
 class YourViewController: UIViewController {
 
     ......
 
-    // Waterflow View
+    // Waterfall View
     var collectionView: UICollectionView = {
-        let layout = WaterflowLayout()
+        let layout = WaterfallLayout()
         layout.sectionInset = UIEdgeInset(top: 10, left: 10, bottom: 10, right: 10)
         layout.minimumColumnSpacing = 10
         layout.minimumInneritemSpacing = 10
         layout.columnCount = 2
-        let view = UICollectionView(frame: YOUR_VIEW_FRAME, collectionViewLayout: layout)
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.register(WaterFlowCell.self, forCellWithReuseIdentifier: "CELl_REUSE_ID")
         view.delegate = self
         view.dataSource = self
@@ -33,6 +38,7 @@ class YourViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(collectionView)
+        collectionView.frame = view.bounds
     }
 
     ......
@@ -46,7 +52,7 @@ extension YourViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
 }
 
-// WaterflowViewDelegate
+// WaterflowView Delegate
 extension YourViewController: WaterflowViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
@@ -54,6 +60,10 @@ extension YourViewController: WaterflowViewDelegate {
         let width = calculated item's width
         return CGSize(width: width, height: height)
     }
-    
+
 }
 ```
+
+## MIT License 
+
+WaterfallLayout released under the MIT license. See LICENSE for details.
