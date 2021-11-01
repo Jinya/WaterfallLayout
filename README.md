@@ -1,5 +1,8 @@
 # WaterfallLayout
-A waterfall-like layout for UICollectionView.
+A waterfall-like (Pinterest-style) layout for UICollectionView.
+
+## Requirements
+iOS 9.0+
 
 ## Preview
 ![Preview](preview.gif)
