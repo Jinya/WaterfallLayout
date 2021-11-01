@@ -16,19 +16,20 @@ A waterfall-like layout for UICollectionView.
 import UIKit
 import WaterfallLayout
 
-class YourViewController: UIViewController {
-
-    ......
+class DemoViewController: UIViewController {
 
     // Waterfall View
-    var collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let layout = WaterfallLayout()
-        layout.sectionInset = UIEdgeInset(top: 10, left: 10, bottom: 10, right: 10)
-        layout.minimumColumnSpacing = 10
-        layout.minimumInneritemSpacing = 10
+        
+        // you can customize your layout
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        layout.minimumColumnSpacing = 16
+        layout.minimumVerticalItemSpacing = 16
         layout.columnCount = 2
+        
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.register(WaterFlowCell.self, forCellWithReuseIdentifier: "CELl_REUSE_ID")
+        view.register(DemoWaterfallCell.self, forCellWithReuseIdentifier: "reuseIdentifier")
         view.delegate = self
         view.dataSource = self
         return view
@@ -38,29 +39,55 @@ class YourViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(collectionView)
-        collectionView.frame = view.bounds
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
-
-    ......
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
     
 }
 
 // UICollectionView DataSource & Delegate
-extension YourViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
-    ......
-
+extension DemoViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let name = ["airplane", "car", "bus", "tram", "bicycle"].randomElement()!
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reuseIdentifier", for: indexPath) as? DemoWaterfallCell else {
+            let cell = DemoWaterfallCell(frame: .zero)
+            cell.name = name
+            return cell
+        }
+        cell.name = name
+        return cell
+    }
 }
 
-// WaterflowView Delegate
-extension YourViewController: WaterflowViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
-        let height = calculated item's height
-        let width = calculated item's width
-        return CGSize(width: width, height: height)
+// WaterfallView Delegate
+extension DemoViewController: WaterfallViewDelegate {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        heightForItemAtIndexPath indexPath: IndexPath) -> CGFloat {
+        let height: CGFloat = [100, 150, 200].randomElement()!
+        return height
     }
-
 }
 ```
 
