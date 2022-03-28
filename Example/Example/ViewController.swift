@@ -1,35 +1,13 @@
-# WaterfallLayout
-A waterfall-like (Pinterest-style) layout for UICollectionView.
+//
+//  ViewController.swift
+//  Example
+//
+//  Created by Jinya on 2022/3/28.
+//
 
-This library is a modified lightweight Swift version based on [`CHTCollectionViewWaterfallLayout`](https://github.com/chiahsien/CHTCollectionViewWaterfallLayout.git), very easy to integrated with your existing project just like using Apple official `UICollectionViewFlowLayout` and `UICollectionViewDelegateFlowLayout`.
-
-## Requirements
-iOS 9.0+
-
-## Preview
-![Preview](preview.gif)
-
-## Installation
-#### Swift Package Manager (Recommended)
-
-- Xcode >  File > Swift Packages > Add Package Dependency
-- Add `https://github.com/Jinya/WaterfallLayout.git`
-- Select "Exact Version" (recommend using the latest exact version)
-
-## Package Content
-Only contains:
-
-- `UICollectionViewWaterfallLayout.swift`
-- `UICollectionViewDelegateWaterfallLayout.swift`
-
-and a mini example project.
-
-## How to use
-```swift
 import UIKit
 import WaterfallLayout
 
-// collection view cell
 class WaterfallViewCell: UICollectionViewCell {
     static let reuseIdentifier = "reuseIdentifier"
 
@@ -57,7 +35,6 @@ class WaterfallViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) { fatalError() }
 }
 
-// collection view controller
 class ViewController: UIViewController {
 
     var waterfallView: UICollectionView!
@@ -87,7 +64,6 @@ class ViewController: UIViewController {
     }
 }
 
-// collection view data source
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 100
@@ -105,24 +81,13 @@ extension ViewController: UICollectionViewDataSource {
     }
 }
 
-// collection view delegate and waterfall layout delegate
 extension ViewController: UICollectionViewDelegateWaterfallLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let randomHeights: [CGFloat] = [300, 400, 500, 600, 700, 800]
         return CGSize(width: 500, height: randomHeights.randomElement()!)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("did select item at \(indexPath.item)")
     }
 }
-
-```
-
-## MIT License 
-
-WaterfallLayout released under the MIT license. See LICENSE for details.
-
-## Acknowledgement
-
-[`CHTCollectionViewWaterfallLayout`](https://github.com/chiahsien/CHTCollectionViewWaterfallLayout.git)
