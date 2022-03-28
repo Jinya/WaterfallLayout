@@ -73,9 +73,9 @@ extension ViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WaterfallViewCell.reuseIdentifier, for: indexPath) as? WaterfallViewCell else {
             fatalError()
         }
-        let titles: [String] = ["Shanghai", "Chongqing", "New York", "San Francisco", "Tokyo", "Phuket", "Singapore", "Wuhan", "Shenzhen", "Los Angeles"]
+        let cities: [String] = ["Shanghai", "Chongqing", "New York", "San Francisco", "Tokyo", "Phuket", "Singapore", "Wuhan", "Shenzhen", "Los Angeles"]
         let colors: [UIColor] = [.red, .magenta, .brown, .blue, .purple, .blue, .cyan, .gray, .green, .yellow, .purple]
-        cell.titleLabel.text = titles.randomElement()!
+        cell.titleLabel.text = cities.randomElement()!
         cell.titleLabel.backgroundColor = colors.randomElement()!
         return cell
     }
@@ -88,6 +88,7 @@ extension ViewController: UICollectionViewDelegateWaterfallLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("did select item at \(indexPath.item)")
+        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? WaterfallViewCell else { return }
+        print("Selected city is \(selectedCell.titleLabel.text ?? "None").")
     }
 }

@@ -3,11 +3,11 @@ A waterfall-like (Pinterest-style) layout for UICollectionView.
 
 This library is a modified lightweight Swift version based on [`CHTCollectionViewWaterfallLayout`](https://github.com/chiahsien/CHTCollectionViewWaterfallLayout.git), very easy to integrated with your existing project just like using Apple official `UICollectionViewFlowLayout` and `UICollectionViewDelegateFlowLayout`.
 
-## Requirements
-iOS 9.0+
-
 ## Preview
 ![Preview](preview.gif)
+
+## Requirements
+iOS 9.0+
 
 ## Installation
 #### Swift Package Manager (Recommended)
@@ -16,7 +16,7 @@ iOS 9.0+
 - Add `https://github.com/Jinya/WaterfallLayout.git`
 - Select "Exact Version" (recommend using the latest exact version)
 
-## Package Content
+## Package content
 Only contains:
 
 - `UICollectionViewWaterfallLayout.swift`
@@ -24,7 +24,7 @@ Only contains:
 
 and a mini example project.
 
-## How to use
+## Example codes
 ```swift
 import UIKit
 import WaterfallLayout

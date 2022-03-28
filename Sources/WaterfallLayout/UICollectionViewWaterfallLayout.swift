@@ -87,7 +87,7 @@ public class UICollectionViewWaterfallLayout: UICollectionViewLayout {
         let spaceColumnCount = CGFloat(columnCount - 1)
         let columnSpacing = delegate?.collectionView?(collectionView!, layout: self, minimumColumnSpacingFor: section) ?? minimumColumnSpacing
         let width = collectionViewContentWidth(ofSection: section)
-        return floor((width - (spaceColumnCount * columnSpacing)) / CGFloat(columnCount))
+        return (width - (spaceColumnCount * columnSpacing)) / CGFloat(columnCount)
     }
 
     override public func prepare() {
