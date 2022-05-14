@@ -1,9 +1,3 @@
-//
-//  AppDelegate.swift
-//  Example
-//
-//  Created by Jinya on 2022/3/28.
-//
 
 import UIKit
 

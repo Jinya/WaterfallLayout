@@ -1,55 +1,32 @@
-//
-//  ViewController.swift
-//  Example
-//
-//  Created by Jinya on 2022/3/28.
-//
 
 import UIKit
 import WaterfallLayout
 
-class WaterfallViewCell: UICollectionViewCell {
-    static let reuseIdentifier = "reuseIdentifier"
-
-    let titleLabel = UILabel()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        titleLabel.font = .preferredFont(forTextStyle: .title1)
-        titleLabel.textColor = .white
-        titleLabel.textAlignment = .center
-        titleLabel.layer.cornerRadius = 12
-        titleLabel.clipsToBounds = true
-
-        contentView.addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
-    }
-
-    required init?(coder: NSCoder) { fatalError() }
-}
+let cellReuseIdentifier = "cellReuseIdentifier"
+let headerReuseIdentifier = "headerReuseIdentifier"
+let footerReuseIdentifier = "footerReuseIdentifier"
 
 class ViewController: UIViewController {
+    let waterfallView = UICollectionView(frame: .zero, collectionViewLayout: WaterfallLayout())
 
-    var waterfallView: UICollectionView!
+    let colors: [UIColor] = [.red, .magenta, .brown, .blue, .purple, .blue, .cyan, .gray, .green, .yellow, .purple]
+
+    lazy var cellSizes: [CGSize] = {
+        let width = 500
+        var sizes = [CGSize]()
+        (0...100).forEach { _ in
+            let height = [200, 300, 400, 500, 600, 700, 800, 900].randomElement()!
+            sizes.append(.init(width: width, height: height))
+        }
+        return sizes
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let layout = UICollectionViewWaterfallLayout()
-        layout.columnCount = 2
-        layout.minimumColumnSpacing = 20
-        layout.minimumInteritemSpacing = 20
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-
-        waterfallView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        waterfallView.register(WaterfallViewCell.self, forCellWithReuseIdentifier: WaterfallViewCell.reuseIdentifier)
+        waterfallView.register(WaterfallViewCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
+        waterfallView.register(WaterfallHeaderFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
+        waterfallView.register(WaterfallHeaderFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footerReuseIdentifier)
         waterfallView.dataSource = self
         waterfallView.delegate = self
 
@@ -66,29 +43,74 @@ class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
+        return cellSizes.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WaterfallViewCell.reuseIdentifier, for: indexPath) as? WaterfallViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? WaterfallViewCell else {
             fatalError()
         }
-        let cities: [String] = ["Shanghai", "Chongqing", "New York", "San Francisco", "Tokyo", "Phuket", "Singapore", "Wuhan", "Shenzhen", "Los Angeles"]
-        let colors: [UIColor] = [.red, .magenta, .brown, .blue, .purple, .blue, .cyan, .gray, .green, .yellow, .purple]
-        cell.titleLabel.text = cities.randomElement()!
-        cell.titleLabel.backgroundColor = colors.randomElement()!
+        cell.titleLabel.text = "cell \(indexPath.item)"
+        cell.contentView.backgroundColor = colors.randomElement()!
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as? WaterfallHeaderFooterView else {
+                fatalError()
+            }
+            header.titleLabel.text = "Header"
+            return header
+        case UICollectionView.elementKindSectionFooter:
+            guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseIdentifier, for: indexPath) as? WaterfallHeaderFooterView else {
+                fatalError()
+            }
+            footer.titleLabel.text = "footer"
+            return footer
+        default:
+            fatalError()
+        }
     }
 }
 
 extension ViewController: UICollectionViewDelegateWaterfallLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let randomHeights: [CGFloat] = [300, 400, 500, 600, 700, 800]
-        return CGSize(width: 500, height: randomHeights.randomElement()!)
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
     }
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, numberOfColumnsInSection section: Int) -> Int {
+        return traitCollection.horizontalSizeClass == .compact ? 2 : 4
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return cellSizes[indexPath.item]
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return .init(top: 10, left: 10, bottom: 10, right: 10)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumColumnSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return .init(width: collectionView.bounds.width, height: 80)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return .init(width: collectionView.bounds.width, height: 80)
+    }
+}
+
+extension ViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? WaterfallViewCell else { return }
-        print("Selected city is \(selectedCell.titleLabel.text ?? "None").")
+        print("Did select cell at \(indexPath.description)")
     }
 }

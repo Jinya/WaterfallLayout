@@ -1,128 +1,134 @@
 # WaterfallLayout
-A waterfall-like (Pinterest-style) layout for UICollectionView.
 
-This library is a modified lightweight Swift version based on [`CHTCollectionViewWaterfallLayout`](https://github.com/chiahsien/CHTCollectionViewWaterfallLayout.git), very easy to integrated with your existing project just like using Apple official `UICollectionViewFlowLayout` and `UICollectionViewDelegateFlowLayout`.
+`WaterfallLayout` is a `UICollectionViewLayout` subclass for vertically laying out views like a waterfall, just like Pinterest app.
 
-## Preview
-![Preview](preview.gif)
+## Preview of the Example App
+
+<div align="left">
+    <img src="./preview.jpg" alt="Preview" width="200">
+</div>
 
 ## Requirements
-iOS 9.0+
+
+Deployment target iOS 11.0+
 
 ## Installation
-#### Swift Package Manager (Recommended)
 
-- Xcode >  File > Swift Packages > Add Package Dependency
-- Add `https://github.com/Jinya/WaterfallLayout.git`
-- Select "Exact Version" (recommend using the latest exact version)
+### Swift Package Manager
 
-## Package content
-Only contains:
+1. Xcode >  File > Swift Packages > Add Package Dependency
+2. Add `https://github.com/Jinya/WaterfallLayout.git`
+3. Select "Up to Next Minor" from "0.2.0"
 
-- `UICollectionViewWaterfallLayout.swift`
-- `UICollectionViewDelegateWaterfallLayout.swift`
+## Usage
 
-and a mini example project.
+Once you've integrated the `WaterfallLayout` into your project, using it with a collection view is easy.
 
-## Example codes
+### Importing WaterfallLayout
+
+At the top of the file where you'd like to use `WaterfallLayout` (likely `UIViewController` subclass).
+
 ```swift
-import UIKit
 import WaterfallLayout
-
-// collection view cell
-class WaterfallViewCell: UICollectionViewCell {
-    static let reuseIdentifier = "reuseIdentifier"
-
-    let titleLabel = UILabel()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        titleLabel.font = .preferredFont(forTextStyle: .title1)
-        titleLabel.textColor = .white
-        titleLabel.textAlignment = .center
-        titleLabel.layer.cornerRadius = 12
-        titleLabel.clipsToBounds = true
-
-        contentView.addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
-    }
-
-    required init?(coder: NSCoder) { fatalError() }
-}
-
-// collection view controller
-class ViewController: UIViewController {
-
-    var waterfallView: UICollectionView!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        let layout = UICollectionViewWaterfallLayout()
-        layout.columnCount = 2
-        layout.minimumColumnSpacing = 20
-        layout.minimumInteritemSpacing = 20
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-
-        waterfallView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        waterfallView.register(WaterfallViewCell.self, forCellWithReuseIdentifier: WaterfallViewCell.reuseIdentifier)
-        waterfallView.dataSource = self
-        waterfallView.delegate = self
-
-        view.addSubview(waterfallView)
-        waterfallView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            waterfallView.topAnchor.constraint(equalTo: view.topAnchor),
-            waterfallView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            waterfallView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            waterfallView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-}
-
-// collection view data source
-extension ViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WaterfallViewCell.reuseIdentifier, for: indexPath) as? WaterfallViewCell else {
-            fatalError()
-        }
-        let titles: [String] = ["Shanghai", "Chongqing", "New York", "San Francisco", "Tokyo", "Phuket", "Singapore", "Wuhan", "Shenzhen", "Los Angeles"]
-        let colors: [UIColor] = [.red, .magenta, .brown, .blue, .purple, .blue, .cyan, .gray, .green, .yellow, .purple]
-        cell.titleLabel.text = titles.randomElement()!
-        cell.titleLabel.backgroundColor = colors.randomElement()!
-        return cell
-    }
-}
-
-// collection view delegate and waterfall layout delegate
-extension ViewController: UICollectionViewDelegateWaterfallLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let randomHeights: [CGFloat] = [300, 400, 500, 600, 700, 800]
-        return CGSize(width: 500, height: randomHeights.randomElement()!)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("did select item at \(indexPath.item)")
-    }
-}
-
 ```
 
-## MIT License 
+### Setting up the collection view
+
+Create your `UICollectionView` instance, passing in a `WaterfallLayout` instance for the layout parameter.
+
+```swift
+let layout = WaterfallLayout()
+let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+```
+
+Add `collectionView` to its superview, then properly constrain it using Auto Layout or manually set its `frame` property.
+
+```swift
+view.addSubview(collectionView)
+
+collectionView.translatesAutoresizingMaskIntoConstraints = false
+
+NSLayoutConstraint.activate([
+    collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+    collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+    collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+    collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+])
+```
+
+### Registering cells and supplementary views
+
+Register your cell and reusable view types with your collection view.
+
+```swift
+collectionView.register(MyCustomCell.self, forCellWithReuseIdentifier: "MyCustomCellReuseIdentifier")
+
+// Only necessary if you want section headers
+collectionView.register(MyCustomHeader.self, forSupplementaryViewOfKind: UICollectionView.SupplementaryViewKind.sectionHeader, withReuseIdentifier: "MyCustomHeaderReuseIdentifier")
+
+// Only necessary if you want section footers
+collectionView.register(MyCustomFooter.self, forSupplementaryViewOfKind: UICollectionView.SupplementaryViewKind.sectionFooter, withReuseIdentifier: "MyCustomFooterReuseIdentifier")
+```
+
+### Setting the data source
+
+Now that you've registered your view types with your collection view, it's time to wire up the data source. Like with any collection view integration, your data source needs to conform to `UICollectionViewDataSource`. If the same object that owns your collection view is also your data source, you can simply do this:
+
+```swift
+collectionView.dataSource = self
+```
+
+### Configuring the delegate
+
+Lastly, it's time to configure the layout to suit your needs. Like with `UICollectionViewFlowLayout` and `UICollectionViewDelegateFlowLayout`, `WaterfallLayout` configured its layout through its `UICollectionViewDelegateWaterfallLayout`.
+
+To start configuring `WaterfallLayout`, set your collection view's `delegate` property to an object conforming to `UICollectionViewDelegateWaterfallLayout`. If the same object that owns your collection view is also your delegate, you can simply do this:
+
+```swift
+collectionView.delegate = self
+```
+
+Here's an example delegate implementation:
+
+```swift
+extension ViewController: UICollectionViewDelegateWaterfallLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, numberOfColumnsInSection section: Int) -> Int {
+        // You can dynamically configure the number of columns in a section here, e.g., depending on the horizontal size of the collection view.
+        return traitCollection.horizontalSizeClass == .compact ? 2 : 4
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // Here to configure size for every cell.
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return .init(top: 10, left: 10, bottom: 10, right: 10)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumColumnSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return .init(width: collectionView.bounds.width, height: 80)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return .init(width: collectionView.bounds.width, height: 80)
+    }
+}
+```
+
+If you've followed the steps above, you should have a working `UICollectionView` using `WaterfallLayout`! If you'd like to work with a pre-made example, check out the included example project.
+
+## MIT License
 
 WaterfallLayout released under the MIT license. See LICENSE for details.
 
 ## Acknowledgement
 
-[`CHTCollectionViewWaterfallLayout`](https://github.com/chiahsien/CHTCollectionViewWaterfallLayout.git)
+`WaterfallLayout` was heavily inspired by [`CHTCollectionViewWaterfallLayout`](https://github.com/chiahsien/CHTCollectionViewWaterfallLayout.git).
